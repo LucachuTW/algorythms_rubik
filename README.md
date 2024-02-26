@@ -1,2 +1,2 @@
 # algorithms_rubik
-Bunch og algorythms to solve rubiks cube
+Bunch of algorythms to solve rubiks cube
