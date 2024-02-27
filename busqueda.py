@@ -161,7 +161,7 @@ class BusquedaProfundidadIterativa(Busqueda):
         else:
             return None
     def buscarSolucion(self, inicial):
-        profundidad_maxima = 6
+        profundidad_maxima = 26
         for profundidad_actual in range(profundidad_maxima + 1):
             solucion = self.buscarSolucionAcotada(inicial,profundidad_actual)
             if solucion is not None:
