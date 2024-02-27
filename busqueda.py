@@ -134,7 +134,6 @@ class BusquedaProfundidadIterativa(Busqueda):
         solucion = False
         abiertos = []
         cerrados = dict()
-        cota=6
         abiertos.append(NodoProfundidadAcotada(inicial, None, None,0))
         while not solucion and len(abiertos)>0:
                         
