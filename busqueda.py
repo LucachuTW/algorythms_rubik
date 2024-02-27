@@ -93,7 +93,7 @@ class BusquedaProfundidad(Busqueda):
 
 class BusquedaProfundidadAcotada(Busqueda):
     
-    def buscarSolucion(self,inicial):
+    def buscarSolucion(self,inicial,cota):
         nodoActual = None
         actual, hijo = None, None
         solucion = False
@@ -126,4 +126,44 @@ class BusquedaProfundidadAcotada(Busqueda):
         else:
             return None
 
+class BusquedaProfundidadIterativa(Busqueda):
+    
+    def buscarSolucionAcotada(self,inicial,cota):
+        nodoActual = None
+        actual, hijo = None, None
+        solucion = False
+        abiertos = []
+        cerrados = dict()
+        cota=6
+        abiertos.append(NodoProfundidadAcotada(inicial, None, None,0))
+        while not solucion and len(abiertos)>0:
+                        
+            nodoActual = abiertos.pop()
+            actual = nodoActual.estado
+            if actual.esFinal():
+                solucion = True
+            elif nodoActual.profundidad<cota:
+                cerrados[actual.cubo.visualizar()] = nodoActual
+                for operador in actual.operadoresAplicables():
+                    hijo = actual.aplicarOperador(operador)
+                    if hijo.cubo.visualizar() not in cerrados.keys() and hijo.cubo.visualizar() not in abiertos:
+                        abiertos.insert(0, NodoProfundidadAcotada(hijo, nodoActual, operador,nodoActual.profundidad+1))
+                        
 
+                    
+        if solucion:
+            lista = []
+            nodo = nodoActual
+            while nodo.padre != None: #Asciende hasta la raíz
+                lista.insert(0, nodo.operador)
+                nodo = nodo.padre
+            return lista
+        else:
+            return None
+    def buscarSolucion(self, inicial):
+        profundidad_maxima = 6
+        for profundidad_actual in range(profundidad_maxima + 1):
+            solucion = self.buscarSolucionAcotada(inicial,profundidad_actual)
+            if solucion is not None:
+                return solucion
+        return None

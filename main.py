@@ -32,7 +32,7 @@ print("CUBO INICIAL (MEZCLADO):\n" + cubo.visualizar())
 
 #Descomentar una vez se implemente la búsqueda en anchura
 #Creación de un problema
-problema = Problema(EstadoRubik(cubo), BusquedaProfundidadAcotada())
+problema = Problema(EstadoRubik(cubo), BusquedaProfundidadIterativa())
 
 
 print("SOLUCION:")
