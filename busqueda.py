@@ -56,7 +56,6 @@ class BusquedaAnchura(Busqueda):
 
 class BusquedaProfundidad(Busqueda):
     
-    #Implementa la búsqueda en anchura. Si encuentra solución recupera la lista de Operadores empleados almacenada en los atributos de los objetos NodoAnchura
     def buscarSolucion(self,inicial):
         nodoActual = None
         actual, hijo = None, None
@@ -92,6 +91,39 @@ class BusquedaProfundidad(Busqueda):
         else:
             return None
 
+class BusquedaProfundidadAcotada(Busqueda):
+    
+    def buscarSolucion(self,inicial):
+        nodoActual = None
+        actual, hijo = None, None
+        solucion = False
+        abiertos = []
+        cerrados = dict()
+        cota=6
+        abiertos.append(NodoProfundidadAcotada(inicial, None, None,0))
+        while not solucion and len(abiertos)>0:
+                        
+            nodoActual = abiertos.pop()
+            actual = nodoActual.estado
+            if actual.esFinal():
+                solucion = True
+            elif nodoActual.profundidad<cota:
+                cerrados[actual.cubo.visualizar()] = nodoActual
+                for operador in actual.operadoresAplicables():
+                    hijo = actual.aplicarOperador(operador)
+                    if hijo.cubo.visualizar() not in cerrados.keys() and hijo.cubo.visualizar() not in abiertos:
+                        abiertos.insert(0, NodoProfundidadAcotada(hijo, nodoActual, operador,nodoActual.profundidad+1))
+                        
 
+                    
+        if solucion:
+            lista = []
+            nodo = nodoActual
+            while nodo.padre != None: #Asciende hasta la raíz
+                lista.insert(0, nodo.operador)
+                nodo = nodo.padre
+            return lista
+        else:
+            return None
 
 
