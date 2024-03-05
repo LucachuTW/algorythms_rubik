@@ -65,6 +65,7 @@ class BusquedaProfundidad(Busqueda):
         abiertos = []
         cerrados = dict()
         abiertos.append(NodoProfundidad(inicial, None, None))
+        cerrados[inicial.cubo.visualizar()] = inicial
         while not solucion and len(abiertos)>0:
             #completar
             # Actual = primer nodo abierto de la lista abierta
@@ -80,6 +81,7 @@ class BusquedaProfundidad(Busqueda):
                     if hijo.cubo.visualizar() not in cerrados.keys() and hijo.cubo.visualizar() not in abiertos:
                        
                         abiertos.insert(0, NodoProfundidad(hijo, nodoActual, operador))
+                        cerrados[hijo.cubo.visualizar()] = hijo 
                         
 
                     
@@ -168,3 +170,4 @@ class BusquedaProfundidadIterativa(Busqueda):
             if solucion is not None:
                 return solucion
         return None
+
