@@ -25,6 +25,7 @@ class BusquedaAnchura(Busqueda):
         abiertos = []
         cerrados = dict()
         abiertos.append(NodoAnchura(inicial, None, None))
+        cerrados[inicial.cubo.visualizar()] = inicial
         while not solucion and len(abiertos)>0:
             #completar
             # Actual = primer nodo abierto de la lista abierta
@@ -39,6 +40,7 @@ class BusquedaAnchura(Busqueda):
                     hijo = actual.aplicarOperador(operador)
                     if hijo.cubo.visualizar() not in cerrados.keys():
                         abiertos.append(NodoAnchura(hijo, nodoActual, operador))
+                        cerrados[hijo.cubo.visualizar()] = hijo
 
                     
         if solucion:

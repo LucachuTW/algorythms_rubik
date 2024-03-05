@@ -1,6 +1,6 @@
 
 from random import *
-
+seed(1)
 #Clase que encapsula una cara del cubo de Rubik.
 #Cada cara tiene un color asociado (coincide con su índice en el array caras del objeto Cubo) y
 # un array de 9 Casillas distribuidas en "espiral" sobre la cara
