@@ -206,9 +206,34 @@ class BusquedaVoraz(Busqueda):
             return lista
         else:
             return None
+def contar_caras_mal_colocadas(self, cubo):
+    caras_mal_colocadas = 0
+
+    for i in range(len(cubo.estado)):
+        for j in range(len(cubo.estado[0])):
+            color_actual = cubo.estado[i][j]
+            cara_actual = cubo.estado[i]
+
+            # Obtener los colores de las caras vecinas
+            color_norte = cubo.estado[vecinoNorte[cara_actual]][i]
+            color_este = cubo.estado[vecinoEste[cara_actual]][i]
+            color_sur = cubo.estado[vecinoSur[cara_actual]][i]
+            color_oeste = cubo.estado[vecinoOeste[cara_actual]][i]
+
+            # Comparar con los colores de las caras vecinas
+            if color_actual != color_norte:
+                caras_mal_colocadas += 1
+            if color_actual != color_este:
+                caras_mal_colocadas += 1
+            if color_actual != color_sur:
+                caras_mal_colocadas += 1
+            if color_actual != color_oeste:
+                caras_mal_colocadas += 1
+
+    return caras_mal_colocadas
 
 # Ejemplo de heurística para contar el número de caras incorrectas
 def heuristica_cuborubik(estado):
     # Implementa aquí tu heurística
     # Puedes contar cuántas caras están en su color incorrecto
-    return 0  # Esta es una heurística trivial, debes implementar una adecuada
+    return contar_caras_mal_colocadas(cubo) # Esta es una heurística trivial, debes implementar una adecuada
