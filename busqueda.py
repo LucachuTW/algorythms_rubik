@@ -171,3 +171,44 @@ class BusquedaProfundidadIterativa(Busqueda):
                 return solucion
         return None
 
+class BusquedaVoraz(Busqueda):
+    def __init__(self):
+        self.heuristica = heuristica_cuborubik
+
+    def buscarSolucion(self, inicial):
+        nodoActual = None
+        actual, hijo = None, None
+        solucion = False
+        abiertos = []
+        cerrados = dict()
+        abiertos.append(NodoVoraz(inicial, None, None, self.heuristica(inicial)))
+        while not solucion and len(abiertos) > 0:
+            # Selecciona el nodo con la menor heurística
+            nodoActual = min(abiertos, key=lambda x: x.heuristica)
+            abiertos.remove(nodoActual)
+            actual = nodoActual.estado
+            if actual.esFinal():
+                solucion = True
+            else:
+                cerrados[actual.cubo.visualizar()] = nodoActual
+                for operador in actual.operadoresAplicables():
+                    hijo = actual.aplicarOperador(operador)
+                    if hijo.cubo.visualizar() not in cerrados.keys():
+                        abiertos.append(NodoVoraz(hijo, nodoActual, operador, self.heuristica(hijo)))
+                        cerrados[hijo.cubo.visualizar()] = hijo
+
+        if solucion:
+            lista = []
+            nodo = nodoActual
+            while nodo.padre is not None: # Asciende hasta la raíz
+                lista.insert(0, nodo.operador)
+                nodo = nodo.padre
+            return lista
+        else:
+            return None
+
+# Ejemplo de heurística para contar el número de caras incorrectas
+def heuristica_cuborubik(estado):
+    # Implementa aquí tu heurística
+    # Puedes contar cuántas caras están en su color incorrecto
+    return 0  # Esta es una heurística trivial, debes implementar una adecuada

@@ -28,5 +28,8 @@ class NodoProfundidadAcotada(Nodo):
         super().__init__(estado, padre)
         self.operador=operador
         self.profundidad=profundidad
-
-
+class NodoVoraz(Nodo):
+    def __init__(self, estado, padre, operador, heuristica):
+        super().__init__(estado, padre)
+        self.operador = operador
+        self.heuristica = heuristica
