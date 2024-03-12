@@ -1,6 +1,4 @@
 from nodos import *
-
-
 from abc import abstractmethod
 from abc import ABCMeta
 
