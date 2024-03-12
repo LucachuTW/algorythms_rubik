@@ -1,5 +1,6 @@
 from abc import abstractmethod, ABCMeta
-
+from nodos import *
+from cubo import *
 # Interfaz genérico para algoritmos de búsqueda
 class Busqueda(metaclass=ABCMeta):
     @abstractmethod
@@ -107,8 +108,8 @@ class BusquedaProfundidadIterativa(Busqueda):
         return None
 
 class BusquedaVoraz(Busqueda):
-    def __init__(self):
-        self.heuristica = heuristica_cuborubik
+    def __init__(self, heuristica):
+        self.heuristica = heuristica
 
     def buscarSolucion(self, inicial):
         nodoActual = None
@@ -136,9 +137,6 @@ class BusquedaVoraz(Busqueda):
             return lista
         else:
             return None
-
-    def heuristica_cuborubik(self, estado):
-        return self.contar_caras_mal_colocadas(estado.cubo)
 
     def contar_caras_mal_colocadas(self, cubo):
         caras_mal_colocadas = 0

@@ -3,8 +3,6 @@ from cubo import *
 from problemaRubik import *
 from busqueda import *
 
-
-
 cubo = Cubo()
 
 print("CUBO SIN MEZCLAR:\n" + cubo.visualizar())
@@ -26,7 +24,7 @@ print("CUBO INICIAL (MEZCLADO):\n" + cubo.visualizar())
 
 #Descomentar una vez se implemente la búsqueda en anchura
 #Creación de un problema
-problema = Problema(EstadoRubik(cubo), BusquedaVoraz())
+problema = Problema(EstadoRubik(cubo), BusquedaVoraz(BusquedaVoraz.contar_caras_mal_colocadas))
 
 
 print("SOLUCION:")
