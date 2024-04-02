@@ -117,8 +117,10 @@ class BusquedaVoraz(Busqueda):
         solucion = False
         abiertos = []
         abiertos.append(NodoVoraz(inicial, None, None, self.heuristica(inicial)))
+
         while not solucion and len(abiertos) > 0:
-            nodoActual = min(abiertos, key=lambda x: x.heuristica)
+            nodoActual = min(abiertos, key=lambda x: self.heuristica(x.estado))
+
             abiertos.remove(nodoActual)
             actual = nodoActual.estado
             if actual.esFinal():
@@ -138,22 +140,90 @@ class BusquedaVoraz(Busqueda):
         else:
             return None
 
-    def contar_caras_mal_colocadas(self, cubo):
-        caras_mal_colocadas = 0
-        for i in range(len(cubo.estado)):
-            for j in range(len(cubo.estado[0])):
-                color_actual = cubo.estado[i][j]
-                cara_actual = cubo.estado[i]
-                color_norte = cubo.estado[vecinoNorte[cara_actual]][i]
-                color_este = cubo.estado[vecinoEste[cara_actual]][i]
-                color_sur = cubo.estado[vecinoSur[cara_actual]][i]
-                color_oeste = cubo.estado[vecinoOeste[cara_actual]][i]
-                if color_actual != color_norte:
-                    caras_mal_colocadas += 1
-                if color_actual != color_este:
-                    caras_mal_colocadas += 1
-                if color_actual != color_sur:
-                    caras_mal_colocadas += 1
-                if color_actual != color_oeste:
-                    caras_mal_colocadas += 1
-        return caras_mal_colocadas
+
+class AEstrella(Busqueda):
+    def __init__(self, heuristica):
+        self.heuristica = heuristica
+
+    def buscarSolucion(self, inicial):
+        nodoActual = None
+        actual, hijo = None, None
+        solucion = False
+        abiertos = []
+        abiertos.append(NodoAEstrella(inicial, None, None, 0, self.heuristica(inicial)))
+        CERRADOS = []
+
+        while not solucion and abiertos:
+            nodoActual = min(abiertos, key=lambda x: x.f)
+
+            abiertos.remove(nodoActual)
+            CERRADOS.append(nodoActual)
+            actual = nodoActual.estado
+            if actual.esFinal():
+                solucion = True
+            else:
+                for operador in actual.operadoresAplicables():
+                    hijo = actual.aplicarOperador(operador)
+                    g = nodoActual.g + operador.getCoste()
+                    f = g + self.heuristica(hijo)
+                    encontrado_abiertos = next((nodo for nodo in abiertos if nodo.estado.equals(hijo)), None)
+                    encontrado_cerrados = next((nodo for nodo in CERRADOS if nodo.estado.equals(hijo)), None)
+
+                    if encontrado_abiertos:
+                        if encontrado_abiertos.g > g:
+                            encontrado_abiertos.padre = nodoActual
+                            encontrado_abiertos.operador = operador
+                            encontrado_abiertos.g = g
+                            encontrado_abiertos.f = f
+                    elif not encontrado_cerrados:
+                        abiertos.append(NodoAEstrella(hijo, nodoActual, operador, g, f))
+
+            abiertos.sort(key=lambda x: x.f)
+
+        if solucion:
+            lista = []
+            nodo = nodoActual
+            while nodo.padre is not None:
+                lista.insert(0, nodo.operador)
+                nodo = nodo.padre
+            return lista
+        else:
+            return None
+
+class IDAEstrella(Busqueda):
+    def __init__(self, heuristica):
+        self.heuristica = heuristica
+
+    def buscarSolucion(self, inicial):
+        cota = self.heuristica(inicial)
+        nueva_cota = float('inf')
+        resuelto = False
+
+        while not resuelto:
+            cota = nueva_cota
+            nueva_cota = float('inf')
+            abiertos = [NodoIDAEstrella(inicial, None, None, 0, self.heuristica(inicial))]
+            while abiertos and not resuelto:
+                actual = abiertos[0]
+                abiertos.pop(0)
+                if actual.estado.esFinal():
+                    resuelto = True
+                else:
+                    for operador in actual.estado.operadoresAplicables():
+                        nuevo_estado = actual.estado.aplicarOperador(operador)
+                        f = actual.g + operador.getCoste() + self.heuristica(nuevo_estado)
+                        if f <= cota:
+                            abiertos.insert(0, NodoIDAEstrella(nuevo_estado, actual, operador, actual.g + operador.getCoste(), f))
+                        else:
+                            nueva_cota = min(nueva_cota, f)
+
+        if resuelto:
+            lista = []
+            nodo = actual
+            while nodo.padre is not None:
+                lista.insert(0, nodo.operador)
+                nodo = nodo.padre
+            return lista
+        else:
+            return None
+

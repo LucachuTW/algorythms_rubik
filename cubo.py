@@ -11,6 +11,9 @@ class Cara:
         for i in range(0, 9):
             self.casillas.append(Casilla(color, i))
 
+    def __iter__(self):
+        return iter(self.casillas)
+
 
     def equal(self, cara):
         for i,c in enumerate(cara):
@@ -25,8 +28,12 @@ class Cara:
 #Mantiene el color de la casilla y su posición correcta final en su respectiva cara (la que corresponde a su color)
 class Casilla:
     def __init__(self, color, pos):
-        self.color=color
-        self.posicionCorrecta=pos
+        self.color = color
+        self.posicionCorrecta = pos
+
+    def posicionActual(self):
+        # Aquí debes proporcionar la lógica para obtener la posición actual de la casilla
+        return self.posicionCorrecta  # Suponiendo que la posición actual es la misma que la posición correcta por defecto
 
 
 
@@ -295,7 +302,7 @@ class Cubo:
     #Comparar 2 cubos
     def equals(self,cubo):
         for i in range(0,6):
-            if not self.caras[i].equals(cubo.caras[i]):
+            if not self.caras[i].equal(cubo.caras[i]):
                 return False
         return True
 

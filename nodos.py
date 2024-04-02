@@ -33,3 +33,15 @@ class NodoVoraz(Nodo):
         super().__init__(estado, padre)
         self.operador = operador
         self.heuristica = heuristica
+
+class NodoAEstrella(Nodo):
+    def __init__(self, estado, padre, operador, heuristica):
+        super().__init__(estado, padre)
+        self.operador = operador
+        self.heuristica = heuristica
+
+class NodoIDAEstrella(Nodo):
+    def __init__(self, estado, padre, operador, heuristica):
+        super().__init__(estado, padre)
+        self.operador = operador
+        self.heuristica = heuristica
